@@ -65,7 +65,7 @@ function buildScene() {
         break;
     }
   }
-  if (manip.cursor) scene.cursor = { pt: manip.cursor, state: manip.cursor.state || 'point' };
+  if (manip.cursor) scene.cursor = { pt: manip.cursor, state: manip.cursor.state || 'point', pinch: manip.cursor.pinch || 0 };
   return scene;
 }
 

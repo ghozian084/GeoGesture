@@ -211,7 +211,7 @@ export class Plane {
     ctx.closePath(); ctx.fill();
   }
 
-  drawCursor({ pt, state }) {
+  drawCursor({ pt, state, pinch = 0 }) {
     const { ctx, colors: C } = this;
     const s = this.toScreen(pt);
     const col = state === 'pinch' ? C['--c-image'] : state === 'victory' ? C['--c-anchor'] : state === 'open' ? C['--c-mirror'] : C['--c-cursor'];
@@ -219,6 +219,11 @@ export class Plane {
     ctx.globalAlpha = 0.9;
     ctx.strokeStyle = col; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.arc(s.x, s.y, state === 'pinch' ? 8 : 13, 0, Math.PI * 2); ctx.stroke();
+    // Cincin luar terisi saat ibu jari mendekati telunjuk: siswa melihat seberapa dekat ke "jepit".
+    if (state !== 'pinch' && pinch > 0.05) {
+      ctx.strokeStyle = C['--c-image']; ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.arc(s.x, s.y, 19, -Math.PI / 2, -Math.PI / 2 + pinch * Math.PI * 2); ctx.stroke();
+    }
     ctx.fillStyle = col; ctx.beginPath(); ctx.arc(s.x, s.y, 3, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
   }

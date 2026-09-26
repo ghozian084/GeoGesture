@@ -44,8 +44,8 @@ export const STR = {
   btn_help: { id: 'Panduan gerakan', en: 'Gesture guide' },
 
   // Gerakan
-  g_point: { id: '☝️ Tunjuk — gerakkan kursor', en: '☝️ Point — move the cursor' },
-  g_pinch: { id: '🤏 Jepit — pegang & ubah bayangan', en: '🤏 Pinch — grab & change the image' },
+  g_point: { id: '✋ Gerakkan tangan — kursor mengikuti telapak', en: '✋ Move your hand — the cursor follows your palm' },
+  g_pinch: { id: '🤏 Jepit — pegang & ubah bayangan (cincin oranye penuh = terpegang)', en: '🤏 Pinch — grab & change the image (full orange ring = grabbed)' },
   g_victory: { id: '✌️ Dua jari — pasang pusat / garis di kursor', en: '✌️ Two fingers — place centre / line at cursor' },
   g_open: { id: '🖐️ Telapak terbuka — miringkan untuk memilih arah garis cermin', en: '🖐️ Open palm — tilt to choose the mirror line direction' },
   g_fist: { id: '✊ Kepal 1 detik — ulang', en: '✊ Fist for 1 second — reset' },
