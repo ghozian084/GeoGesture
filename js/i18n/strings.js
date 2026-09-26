@@ -70,10 +70,17 @@ export const STR = {
 
   // Status kamera
   cam_loading: { id: 'Memuat pendeteksi tangan…', en: 'Loading hand detector…' },
+  cam_stage_camera: { id: 'Menyalakan kamera…', en: 'Starting camera…' },
+  cam_stage_lib: { id: 'Memuat library pendeteksi…', en: 'Loading detector library…' },
+  cam_stage_wasm: { id: 'Mengunduh mesin pendeteksi', en: 'Downloading detector engine' },
+  cam_stage_model: { id: 'Mengunduh model tangan', en: 'Downloading hand model' },
+  cam_stage_gpu: { id: 'Menyiapkan pendeteksi (GPU)…', en: 'Starting detector (GPU)…' },
+  cam_stage_cpu: { id: 'Menyiapkan pendeteksi (mode CPU)…', en: 'Starting detector (CPU mode)…' },
+  cam_error_at: { id: 'Pendeteksi gagal di tahap', en: 'Detector failed at step' },
   cam_ready: { id: 'Kamera aktif', en: 'Camera on' },
   cam_nohand: { id: 'Tangan tidak terlihat', en: 'No hand detected' },
   cam_denied: { id: 'Kamera tidak diizinkan — mode sentuh aktif.', en: 'Camera blocked — touch mode on.' },
-  cam_error: { id: 'Pendeteksi gagal dimuat — mode sentuh aktif.', en: 'Detector failed to load — touch mode on.' },
+  cam_error: { id: 'Pendeteksi gagal dimuat — mode sentuh aktif. Coba muat ulang halaman.', en: 'Detector failed to load — touch mode on. Try reloading the page.' },
   cam_insecure: { id: 'Kamera butuh HTTPS atau localhost.', en: 'Camera needs HTTPS or localhost.' },
   cam_off: { id: 'Kamera mati', en: 'Camera off' },
 

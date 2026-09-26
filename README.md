@@ -87,5 +87,8 @@ Pegangan tidak dilepas kalau tangan hilang sesaat (< 0,3 detik): `LOST_GRACE_MS`
 
 Laju deteksi (`DETECT_INTERVAL_MS`) ada di `js/gesture/tracker.js`.
 
+### Kalau pendeteksi tidak mau jalan
+Status di atas bidang menampilkan tahap pemuatan (library → mesin pendeteksi % → model tangan % → GPU/CPU). Setiap tahap punya batas waktu; GPU yang gagal atau macet otomatis diganti CPU. Jika tetap gagal, pesan menyebut tahapnya (mis. `lib`, `wasm`, `model`, `cpu`, `detect`). Tambahkan `?cpu` di URL untuk langsung memakai mode CPU. MediaPipe butuh WebGL; perangkat tanpa WebGL otomatis memakai mode sentuh.
+
 ## Lisensi pihak ketiga
 MediaPipe Tasks Vision © Google, Apache License 2.0.

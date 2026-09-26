@@ -139,20 +139,31 @@ const tracker = new HandTracker($('#video'), {
     gestures.update(lm, aspect);
     showCamStatus(lm ? null : 'cam_nohand', true);
   },
-  onStatus: (s) => {
+  onStatus: (s, info = {}) => {
     const on = s === 'ready' || s === 'loading';
     $('#camPip').hidden = !on;
     $('#btnCam').setAttribute('aria-pressed', String(s === 'ready'));
-    showCamStatus(s === 'loading' ? 'cam_loading' : s === 'off' ? null : null);
+    if (s === 'loading') {
+      const pct = info.pct != null ? ` ${info.pct}%` : '';
+      showCamStatus(info.stage ? `cam_stage_${info.stage}` : 'cam_loading', false, pct);
+    } else if (s === 'error') showCamError(info.stage);
+    else showCamStatus(null);
   },
 });
 
-function showCamStatus(key, soft = false) {
+function showCamStatus(key, soft = false, suffix = '') {
   if (soft && camStatusKey && camStatusKey !== 'cam_nohand') return;
   camStatusKey = key;
   const el = $('#camStatus');
   el.hidden = !key;
-  if (key) el.textContent = t(key);
+  if (key) el.textContent = t(key) + suffix;
+}
+
+/** Pesan gagal yang menyebut tahapnya, supaya guru bisa melaporkan penyebabnya. */
+function showCamError(stage, key = 'cam_error') {
+  $('#camPip').hidden = true;
+  showCamStatus(key, false, stage ? ` (${t('cam_error_at')}: ${stage})` : '');
+  setTimeout(() => camStatusKey === key && showCamStatus(null), 10000);
 }
 
 async function startCamera() {
@@ -161,9 +172,7 @@ async function startCamera() {
   } catch (e) {
     const key = e.code === 'insecure' ? 'cam_insecure' : e.code === 'denied' ? 'cam_denied' : 'cam_error';
     console.warn('camera', e);
-    $('#camPip').hidden = true;
-    showCamStatus(key);
-    setTimeout(() => camStatusKey === key && showCamStatus(null), 6000);
+    showCamError(key === 'cam_error' ? e.stage : null, key);
   }
 }
 $('#btnCam').addEventListener('click', () => (tracker.stream ? tracker.stop() : startCamera()));
