@@ -4,6 +4,9 @@ import { classify, Stabilizer } from './classifier.js';
 
 const FIST_RESET_MS = 1000;
 const ANCHOR_COOLDOWN_MS = 700;
+// Tangan sering "hilang" 1–3 frame di HP/Chromebook (blur, cahaya). Pegangan tidak dilepas
+// selama jeda sesingkat ini supaya bayangan tidak tiba-tiba terlepas.
+const LOST_GRACE_MS = 300;
 
 export class GestureController {
   constructor(plane, manip, { onReset, onGesture } = {}) {
@@ -15,12 +18,15 @@ export class GestureController {
     this.prev = 'none';
     this.fistSince = 0;
     this.lastAnchor = 0;
+    this.lostSince = 0;
   }
 
   /** Dipanggil tiap frame deteksi. lm = null jika tangan tidak terlihat. */
   update(lm, aspect) {
     const now = performance.now();
     if (!lm) {
+      if (!this.lostSince) this.lostSince = now;
+      if (this.prev === 'pinch' && now - this.lostSince < LOST_GRACE_MS) return; // tunggu sebentar
       if (this.prev === 'pinch') this.manip.grabEnd();
       this.stab.reset();
       this.prev = 'none';
@@ -28,13 +34,14 @@ export class GestureController {
       this.onGesture?.({ label: 'none' });
       return;
     }
+    this.lostSince = 0;
     const raw = classify(lm, aspect, this.prev === 'pinch');
-    const { label, cursor, orientation } = this.stab.push(raw);
+    const { label, cursor, orientation, pinchLevel } = this.stab.push(raw, now);
     // Area gerak tangan dipetakan ke seluruh bidang [-R, R] (bukan seluruh kanvas).
     const R = this.plane.range;
     const p = { x: -R + cursor.x * 2 * R, y: R - cursor.y * 2 * R };
     this.cursorState = label;
-    this.manip.setCursor({ ...p, state: label });
+    this.manip.setCursor({ ...p, state: label, pinch: pinchLevel });
 
     // Transisi jepit
     if (label === 'pinch' && this.prev !== 'pinch') this.manip.grabStart(p);

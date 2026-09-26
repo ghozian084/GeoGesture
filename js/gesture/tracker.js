@@ -7,7 +7,7 @@ const LOCAL_VENDOR = new URL('../../vendor/mediapipe/', import.meta.url).href;
 const CDN_VENDOR = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/`;
 const LOCAL_MODEL = new URL('../../models/hand_landmarker.task', import.meta.url).href;
 const REMOTE_MODEL = 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task';
-const DETECT_INTERVAL_MS = 45; // ±22 fps — cukup halus & hemat baterai
+const DETECT_INTERVAL_MS = 33; // ±30 fps — gestur terasa responsif; perangkat lambat otomatis melewatkan frame
 
 async function exists(url) {
   try { return (await fetch(url, { method: 'HEAD' })).ok; } catch { return false; }
@@ -54,7 +54,7 @@ export class HandTracker {
         baseOptions: { modelAssetPath, delegate },
         runningMode: 'VIDEO',
         numHands: 1,
-        minHandDetectionConfidence: 0.6,
+        minHandDetectionConfidence: 0.5,
         minHandPresenceConfidence: 0.5,
         minTrackingConfidence: 0.5,
       });

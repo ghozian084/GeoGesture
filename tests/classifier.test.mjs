@@ -1,7 +1,7 @@
 // Uji pengenal gestur dengan tangan sintetis (tanpa kamera).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { classify, rollToOrientation, Stabilizer } from '../js/gesture/classifier.js';
+import { classify, rollToOrientation, Stabilizer, OneEuro } from '../js/gesture/classifier.js';
 
 /**
  * Tangan tegak sintetis. fingers = [telunjuk, tengah, manis, kelingking] lurus/tekuk.
@@ -58,4 +58,43 @@ test('stabilizer butuh beberapa frame sebelum ganti label', () => {
   assert.equal(s.push(r).label, 'none');
   s.push(r);
   assert.equal(s.push(r).label, 'fist');
+});
+
+test('jepit tetap dikenali walau jari lain lurus (tanda OK)', () => {
+  assert.equal(classify(hand({ fingers: [1, 1, 1, 1], pinch: true }), 1).label, 'pinch');
+});
+
+test('kepalan dengan ibu jari menempel ujung telunjuk tetap kepal, bukan jepit', () => {
+  const lm = hand({ fingers: [0, 0, 0, 0] });
+  lm[4] = { x: lm[8].x - 0.01, y: lm[8].y, z: 0 };
+  assert.equal(classify(lm, 1).label, 'fist');
+});
+
+test('kursor tidak bergeser saat berganti tunjuk → jepit → dua jari', () => {
+  const a = classify(hand({ fingers: [1, 0, 0, 0] }), 1).cursor;
+  const b = classify(hand({ fingers: [1, 0, 0, 0], pinch: true }), 1).cursor;
+  const c = classify(hand({ fingers: [1, 1, 0, 0] }), 1).cursor;
+  for (const q of [b, c]) assert.ok(Math.hypot(q.x - a.x, q.y - a.y) < 1e-9);
+});
+
+test('tingkat jepit naik saat ibu jari mendekati telunjuk', () => {
+  const open = classify(hand({ fingers: [1, 0, 0, 0] }), 1).pinchLevel;
+  const closed = classify(hand({ fingers: [1, 0, 0, 0], pinch: true }), 1).pinchLevel;
+  assert.ok(open < closed && closed === 1);
+});
+
+test('jepit dikenali lebih cepat dari gestur lain', () => {
+  const s = new Stabilizer();
+  const r = classify(hand({ fingers: [1, 0, 0, 0], pinch: true }), 1);
+  s.push(r);
+  assert.equal(s.push(r).label, 'pinch');
+});
+
+test('filter One Euro: getaran kecil diredam, gerak besar diikuti', () => {
+  const f = new OneEuro();
+  let t = 0, out = 0;
+  for (let i = 0; i < 30; i++) out = f.filter(0.5 + (i % 2 ? 0.004 : -0.004), (t += 33));
+  assert.ok(Math.abs(out - 0.5) < 0.003);
+  for (let i = 0; i < 6; i++) out = f.filter(0.9, (t += 33));
+  assert.ok(out > 0.85);
 });

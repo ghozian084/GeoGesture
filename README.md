@@ -33,8 +33,8 @@ Tanpa langkah 1 aplikasi tetap jalan: library dimuat dari CDN jsDelivr dan model
 ## Gestur (satu tangan)
 | Gestur | Fungsi |
 |---|---|
-| ☝️ Tunjuk | Menggerakkan kursor |
-| 🤏 Jepit (ibu jari + telunjuk) | Memegang dan mengubah bayangan; lepas untuk berhenti |
+| ✋ Gerakkan tangan | Kursor mengikuti **tengah telapak**, jadi tidak meloncat saat jari berganti posisi |
+| 🤏 Jepit (ibu jari + telunjuk) | Memegang dan mengubah bayangan; lepas untuk berhenti. Jari lain bebas. Cincin di kursor terisi saat ibu jari mendekat |
 | ✌️ Dua jari | Memasang pusat (rotasi/dilatasi) atau titik garis cermin di posisi kursor |
 | 🖐️ Telapak terbuka + miring | Memilih arah garis cermin: tegak │, rebah ─, miring kanan ╱, miring kiri ╲ |
 | ✊ Kepal 1 detik | Mengulang |
@@ -77,9 +77,13 @@ tests/                  node --test (tanpa browser)
 
 ## Tuning di kelas
 Semua ambang gestur ada di `js/gesture/classifier.js` → `THRESHOLDS`:
-- `pinchOn` / `pinchOff`: sensitivitas jepit (naikkan kalau jepit sulit terdeteksi).
-- `box`: luas area gerak tangan. Perkecil rentangnya supaya cukup gerak sedikit untuk menjangkau seluruh bidang.
-- `stableFrames`: naikkan kalau label gestur sering berkedip.
+- `pinchOn` / `pinchOff`: sensitivitas jepit (naikkan kalau jepit sulit terdeteksi, turunkan kalau sering terjepit tanpa sengaja).
+- `pinchReach`: pembeda jepit dan kepal (turunkan kalau jepit dengan telunjuk sangat bengkok tidak terbaca).
+- `boxX` / `boxY`: area gerak telapak. Perkecil rentangnya supaya cukup gerak sedikit untuk menjangkau seluruh bidang.
+- `minCutoff` / `beta`: penghalus kursor (One Euro). Turunkan `minCutoff` kalau kursor bergetar saat diam; naikkan `beta` kalau kursor tertinggal saat bergerak cepat.
+- `stableFrames` / `pinchFrames`: naikkan kalau label gestur sering berkedip.
+
+Pegangan tidak dilepas kalau tangan hilang sesaat (< 0,3 detik): `LOST_GRACE_MS` di `js/gesture/controller.js`.
 
 Laju deteksi (`DETECT_INTERVAL_MS`) ada di `js/gesture/tracker.js`.
 
