@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tangan Transformasi</title>
+  <meta name="description" content="Media pembelajaran geometri transformasi (translasi, rotasi, refleksi, dilatasi) dengan gerakan tangan. Dwibahasa ID/EN.">
+  <meta name="theme-color" content="#0f766e">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✋</text></svg>">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">✋</span>
+      <div>
+        <h1 data-i18n="appTitle">Tangan Transformasi</h1>
+        <p class="tagline" data-i18n="tagline"></p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="score" id="score" title="Skor / Score">✓ 0</span>
+      <button class="icon-btn" id="btnCam" aria-pressed="false" title="Kamera / Camera">📷</button>
+      <button class="icon-btn" id="btnHelp" title="Panduan / Guide">?</button>
+      <div class="lang" role="group" aria-label="Bahasa / Language">
+        <button data-lang="id">ID</button><button data-lang="en">EN</button>
+      </div>
+    </div>
+    <nav class="modes" role="tablist">
+      <button role="tab" data-mode="explore" data-i18n="mode_explore"></button>
+      <button role="tab" data-mode="mission" data-i18n="mode_mission"></button>
+      <button role="tab" data-mode="detective" data-i18n="mode_detective"></button>
+      <button role="tab" data-mode="composition" data-i18n="mode_composition"></button>
+      <label class="level-pick"><span data-i18n="level"></span>
+        <select id="level"><option>1</option><option>2</option><option>3</option></select>
+      </label>
+    </nav>
+  </header>
+
+  <main class="app">
+    <section class="stage">
+      <canvas id="plane" aria-label="Bidang koordinat / Coordinate plane"></canvas>
+      <div class="cam-pip" id="camPip" hidden>
+        <video id="video" playsinline muted></video>
+        <canvas id="skeleton"></canvas>
+        <div class="gesture-chip" id="gestureChip">—</div>
+        <div class="fist-bar"><span id="fistBar"></span></div>
+      </div>
+      <div class="readout" id="readout"></div>
+      <div class="cam-status" id="camStatus" hidden></div>
+    </section>
+
+    <aside class="side">
+      <div class="toolbar" id="toolbar">
+        <div class="types" role="group" id="typeBtns">
+          <button data-type="translation">⇢ <span data-term="translation"></span></button>
+          <button data-type="rotation">⟲ <span data-term="rotation"></span></button>
+          <button data-type="reflection">⇋ <span data-term="reflection"></span></button>
+          <button data-type="enlargement">⤢ <span data-term="enlargement"></span></button>
+        </div>
+        <div class="tool-row">
+          <div class="orient" id="orientBtns" role="group" hidden>
+            <span class="small" data-i18n="line_dir"></span>
+            <button data-o="v" title="x = k">│</button>
+            <button data-o="h" title="y = k">─</button>
+            <button data-o="d1" title="y = x + k">╱</button>
+            <button data-o="d2" title="y = −x + k">╲</button>
+          </div>
+          <button class="btn small" id="btnSign" hidden data-i18n="flip_sign"></button>
+          <label class="shape-pick" id="shapePick"><span data-i18n="shape"></span>
+            <select id="shapeSel">
+              <option value="triangle">△</option><option value="flag">⚑</option>
+              <option value="lshape">L</option><option value="trapezium">⏢</option>
+            </select>
+          </label>
+          <button class="btn small" id="btnReset" data-i18n="reset"></button>
+        </div>
+      </div>
+      <div class="panel" id="panel"></div>
+    </aside>
+  </main>
+
+  <dialog id="intro">
+    <h2 data-i18n="intro_title"></h2>
+    <p data-i18n="intro_body"></p>
+    <ul class="legend" id="legend"></ul>
+    <p class="small" data-i18n="touch_help"></p>
+    <p class="privacy" data-i18n="privacy"></p>
+    <div class="row">
+      <button class="btn primary" id="introCam" data-i18n="btn_camera"></button>
+      <button class="btn" id="introTouch" data-i18n="btn_touch"></button>
+    </div>
+  </dialog>
+
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
